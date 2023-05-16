@@ -1,4 +1,4 @@
-package com.diefesson.ff;
+package com.diefesson.fm;
 
 import org.junit.jupiter.api.Test;
 
