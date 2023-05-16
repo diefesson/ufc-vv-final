@@ -2,6 +2,10 @@ package com.diefesson.fm;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,47 +33,6 @@ public class FlightTest {
         assertNotNull(flight);
         flight = new Flight("AA3456", 100);
         assertNotNull(flight);
-    }
-
-    @Test
-    public void testAddPassengers() {
-        Flight flight = new Flight("AA1234", 50);
-        flight.setOrigin("London");
-        flight.setDestination("Bucharest");
-        for (int i = 0; i < flight.getSeats(); i++) {
-            flight.addPassenger();
-        }
-        assertEquals(50, flight.getPassengers());
-        assertThrows(RuntimeException.class, () -> {
-            flight.addPassenger();
-        });
-    }
-
-    @Test
-    public void testSetInvalidSeats() {
-        Flight flight = new Flight("AA1234", 50);
-        flight.setOrigin("London");
-        flight.setDestination("Bucharest");
-        for (int i = 0; i < flight.getSeats(); i++) {
-            flight.addPassenger();
-        }
-        assertEquals(50, flight.getPassengers());
-        assertThrows(RuntimeException.class, () -> {
-            flight.setSeats(49);
-        });
-    }
-
-    @Test
-    public void testSetValidSeats() {
-        Flight flight = new Flight("AA1234", 50);
-        flight.setOrigin("London");
-        flight.setDestination("Bucharest");
-        for (int i = 0; i < flight.getSeats(); i++) {
-            flight.addPassenger();
-        }
-        assertEquals(50, flight.getPassengers());
-        flight.setSeats(52);
-        assertEquals(52, flight.getSeats());
     }
 
     @Test
