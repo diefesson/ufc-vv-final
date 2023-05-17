@@ -1,37 +1,45 @@
 package com.diefesson.fm;
 
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Scope;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(Arquillian.class)
+@RunWith(SpringRunner.class)
+@Import(FlightWithPassengersTest.FlightWithPassengerConfiguration.class)
 public class FlightWithPassengersTest {
-    @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClasses(Passenger.class, Flight.class, FlightProducer.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE,
-                        "beans.xml");
+
+    @TestConfiguration
+    public static class FlightWithPassengerConfiguration {
+        @Bean()
+        @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+        public Flight produceFlight() throws IOException {
+            return FlightBuilderUtil.buildFlightFromCsv();
+        }
     }
 
-    @Inject
-    Flight flight;
+    @Autowired
+    public Flight flight;
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testNumberOfSeatsCannotBeExceeded() throws IOException {
         assertEquals(50, flight.getPassengersNumber());
-        flight.addPassenger(new Passenger("124-56-7890", "Michael Johnson", "US"));
+        assertThrows(RuntimeException.class, () -> {
+            flight.addPassenger(new Passenger("124-56-7890", "Michael Johnson", "US"));
+        });
+
     }
 
     @Test
@@ -48,7 +56,7 @@ public class FlightWithPassengersTest {
 
     @Test
     public void testSetInvalidSeats() {
-        Assertions.assertEquals(50, flight.getPassengersNumber());
+        assertEquals(50, flight.getPassengersNumber());
         assertThrows(RuntimeException.class, () -> {
             flight.setSeats(49);
         });
@@ -56,8 +64,8 @@ public class FlightWithPassengersTest {
 
     @Test
     public void testSetValidSeats() {
-        Assertions.assertEquals(50, flight.getPassengersNumber());
+        assertEquals(50, flight.getPassengersNumber());
         flight.setSeats(52);
-        Assertions.assertEquals(52, flight.getSeats());
+        assertEquals(52, flight.getSeats());
     }
 }
