@@ -16,12 +16,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 @Data
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Slf4j
+@Log
 @SeatingLimit
 public class Flight {
 
