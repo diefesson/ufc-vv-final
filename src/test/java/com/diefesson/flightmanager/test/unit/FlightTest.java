@@ -12,9 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import com.diefesson.flightmanager.exception.ModelException;
-import com.diefesson.flightmanager.model.Flight;
 import com.diefesson.flightmanager.model.FlightStatus;
-import com.diefesson.flightmanager.test.util.ValidInstances;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -39,14 +37,14 @@ public class FlightTest {
 
     @Test
     void testValidFlight() {
-        var violations = validator.validate(ValidInstances.createValidFlight());
+        var violations = validator.validate(createValidFlight());
         assertTrue(violations.isEmpty());
     }
 
     @Test
     public void testValidFlightNumber() {
-        var flight1 = ValidInstances.createValidFlight();
-        var flight2 = ValidInstances.createValidFlight();
+        var flight1 = createValidFlight();
+        var flight2 = createValidFlight();
         flight1.setFlightNumber("AA123");
         flight2.setFlightNumber("AA1234");
         var violations1 = validator.validate(flight1);
@@ -68,8 +66,8 @@ public class FlightTest {
 
     @SneakyThrows
     @Test
-    public void testFly() {
-        Flight flight = ValidInstances.createValidFlight();
+    public void testFlyStatus() {
+        var flight = createValidFlight();
         assertEquals(FlightStatus.AT_ORIGIN, flight.getStatus());
         flight.takeOff();
         assertEquals(FlightStatus.IN_FLIGHT, flight.getStatus());
@@ -79,8 +77,19 @@ public class FlightTest {
 
     @SneakyThrows
     @Test
+    public void testFlyOrdering() {
+        var flight = createValidFlight();
+        flight.takeOff();
+        assertThrows(ModelException.class, () -> flight.takeOff());
+        flight.land();
+        assertThrows(ModelException.class, () -> flight.takeOff());
+        assertThrows(ModelException.class, () -> flight.land());
+    }
+
+    @SneakyThrows
+    @Test
     public void testChangeOrigin() {
-        Flight flight = ValidInstances.createValidFlight();
+        var flight = createValidFlight();
         flight.takeOff();
         assertThrows(ModelException.class, () -> flight.setOrigin("Canada"));
         flight.land();
@@ -90,18 +99,18 @@ public class FlightTest {
     @SneakyThrows
     @Test
     public void testChangeDestination() {
-        Flight flight = ValidInstances.createValidFlight();
+        var flight = createValidFlight();
         flight.setDestination("France");
         flight.takeOff();
         flight.setDestination("Canada");
         flight.land();
-        assertThrows(ModelException.class, () -> flight.setOrigin("Canada"));
+        assertThrows(ModelException.class, () -> flight.setDestination("Canada"));
     }
 
     @SneakyThrows
     @Test
     public void testTakeOffFromSomewhere() {
-        Flight flight = ValidInstances.createValidFlight();
+        var flight = createValidFlight();
         flight.setOrigin(null);
         assertThrows(ModelException.class, () -> flight.takeOff());
     }
@@ -109,7 +118,7 @@ public class FlightTest {
     @SneakyThrows
     @Test
     public void testLandIntoSomewhere() {
-        Flight flight = ValidInstances.createValidFlight();
+        var flight = createValidFlight();
         flight.takeOff();
         flight.setDestination(null);
         assertThrows(ModelException.class, () -> flight.land());
@@ -117,7 +126,7 @@ public class FlightTest {
 
     @Test
     public void testNoLandBeforeTakeOff() {
-        Flight flight = ValidInstances.createValidFlight();
+        var flight = createValidFlight();
         assertThrows(ModelException.class, () -> flight.land());
     }
 }

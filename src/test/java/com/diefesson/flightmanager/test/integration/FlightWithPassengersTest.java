@@ -89,7 +89,9 @@ public class FlightWithPassengersTest {
         flight1.addPassenger(createValidPassenger());
         flight1.takeOff();
         assertThrows(ModelException.class, () -> flight1.addPassenger(createValidPassenger()));
+        assertThrows(ModelException.class, () -> flight1.removePassenger(createValidPassenger()));
         flight1.land();
         assertThrows(ModelException.class, () -> flight1.addPassenger(createValidPassenger()));
+        assertThrows(ModelException.class, () -> flight1.removePassenger(createValidPassenger()));
     }
 }

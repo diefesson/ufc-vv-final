@@ -82,24 +82,24 @@ public class Flight {
     }
 
     public void takeOff() throws ModelException {
-        log.info(this + " is taking off");
         if (origin == null) {
             throw new ModelException("flight cannot take off without origin");
         }
         if (status != FlightStatus.AT_ORIGIN) {
             throw new ModelException("flight must be at origin to take off");
         }
+        log.info(this + " is taking off");
         status = FlightStatus.IN_FLIGHT;
     }
 
     public void land() throws ModelException {
-        log.info(this + " is landing");
         if (destination == null) {
             throw new ModelException("flight cannot land without destination");
         }
         if (status != FlightStatus.IN_FLIGHT) {
             throw new ModelException("flight must be in flight to land");
         }
+        log.info(this + " is landing");
         status = FlightStatus.AT_DESTINATION;
     }
 }
