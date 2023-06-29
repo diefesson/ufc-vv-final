@@ -1,0 +1,9 @@
+spring:
+    datasource:
+        url: "jdbc:h2:file:./database/database.db"
+        username: "sa"
+        password: "spring"
+    jpa:
+        database-platform: "org.hibernate.dialect.H2Dialect"
+        hibernate:
+            ddl-auto: "update"

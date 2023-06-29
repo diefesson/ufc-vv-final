@@ -7,22 +7,26 @@ import com.diefesson.flightmanager.constants.Regexes;
 import com.diefesson.flightmanager.constraints.SeatingLimit;
 import com.diefesson.flightmanager.exception.ModelException;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.java.Log;
 
 @Data
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 @Log
 @SeatingLimit
+@Entity
 public class Flight {
 
     @Id
@@ -44,7 +48,8 @@ public class Flight {
 
     @NotNull
     @ToString.Exclude
-    Set<Passenger> passengers;
+    @ManyToMany
+    private Set<Passenger> passengers;
 
     public int getPassengersCount() {
         return passengers.size();

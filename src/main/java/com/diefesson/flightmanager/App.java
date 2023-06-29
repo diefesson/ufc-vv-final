@@ -16,7 +16,7 @@ public class App implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Hello World");
+        log.info("Flight Manager started");
     }
 
 }
