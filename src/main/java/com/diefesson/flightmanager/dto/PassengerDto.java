@@ -7,11 +7,15 @@ import com.diefesson.flightmanager.constraints.IdMatchesCountry;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @IdMatchesCountry
 public class PassengerDto implements IdCountryGet {
 

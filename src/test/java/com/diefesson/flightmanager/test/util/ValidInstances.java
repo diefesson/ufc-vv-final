@@ -2,6 +2,7 @@ package com.diefesson.flightmanager.test.util;
 
 import java.util.Set;
 
+import com.diefesson.flightmanager.dto.PassengerDto;
 import com.diefesson.flightmanager.model.Flight;
 import com.diefesson.flightmanager.model.Passenger;
 
@@ -18,11 +19,22 @@ public class ValidInstances {
     }
 
     public static Passenger createValidPassenger() {
-        return Passenger.builder()
+        return Passenger
+                .builder()
                 .id("321-45-6789")
                 .name("John Smith")
                 .countryCode("US")
                 .build();
+    }
+
+    public static PassengerDto createValidPassengerDto() {
+        return PassengerDto
+                .builder()
+                .id("321-45-6789")
+                .name("John Smith")
+                .countryCode("US")
+                .build();
+
     }
 
 }
