@@ -10,6 +10,7 @@ import com.diefesson.flightmanager.dto.PassengerDto;
 import com.diefesson.flightmanager.model.Passenger;
 import com.diefesson.flightmanager.repository.PassengerRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -20,11 +21,13 @@ public class PassengerService {
 
     private final ModelMapper modelMapper;
 
+    @Transactional
     public PassengerDto add(PassengerDto passengerDto) {
         var passenger = modelMapper.map(passengerDto, Passenger.class);
         return modelMapper.map(passengerRepository.save(passenger), PassengerDto.class);
     }
 
+    @Transactional
     public Optional<PassengerDto> find(String id) {
         var passenger = passengerRepository.findById(id);
         if (passenger.isPresent()) {
@@ -34,6 +37,7 @@ public class PassengerService {
         }
     }
 
+    @Transactional
     public List<PassengerDto> list() {
         return passengerRepository
                 .findAll()

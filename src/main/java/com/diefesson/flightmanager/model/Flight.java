@@ -59,9 +59,10 @@ public class Flight {
         if (status != FlightStatus.AT_ORIGIN) {
             throw new ModelException("cannot add passengers any longer");
         }
-        passengers = new HashSet<>(passengers);
-        return passengers.add(passenger);
-
+        passengers = new HashSet<>(getPassengers());
+        var result = passengers.add(passenger);
+        setPassengers(passengers);
+        return result;
     }
 
     public boolean removePassenger(Passenger passenger) throws ModelException {
@@ -69,7 +70,9 @@ public class Flight {
             throw new ModelException("cannot remove passengers any longer");
         }
         passengers = new HashSet<>(passengers);
-        return passengers.remove(passenger);
+        var result = passengers.remove(passenger);
+        setPassengers(passengers);
+        return result;
     }
 
     public void setOrigin(String origin) throws ModelException {

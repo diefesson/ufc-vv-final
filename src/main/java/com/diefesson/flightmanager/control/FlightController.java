@@ -31,7 +31,7 @@ public class FlightController {
     }
 
     @GetMapping("{id}")
-    public Optional<FlightDto> find(@PathVariable @Pattern(regexp = Regexes.PASSENGER_ID) String id) {
+    public Optional<FlightDto> find(@PathVariable @Pattern(regexp = Regexes.FLIGHT_NUMBER) String id) {
         return flightService.find(id);
     }
 

@@ -7,5 +7,5 @@ import lombok.experimental.StandardException;
 
 @ResponseStatus(code = HttpStatus.BAD_REQUEST)
 @StandardException
-public class ModelException extends FlightManagerException {
+public class FlightNotFoundException extends FlightManagerException {
 }
