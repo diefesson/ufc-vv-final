@@ -1,6 +1,6 @@
 package com.diefesson.flightmanager.test.system;
 
-import static com.diefesson.flightmanager.test.util.ValidInstances.createValidPassengerDto;
+import static com.diefesson.flightmanager.test.util.ValidInstances.createValidFlightDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -17,7 +17,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.diefesson.flightmanager.App;
-import com.diefesson.flightmanager.control.PassengerController;
+import com.diefesson.flightmanager.control.FlightController;
 
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -26,13 +26,13 @@ import jakarta.validation.ValidatorFactory;
 @ExtendWith(SpringExtension.class)
 @Import(App.class)
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class PassengerControllerTest {
+public class FlightControllerTest {
 
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
     @Autowired
-    public PassengerController passengerController;
+    public FlightController flightController;
 
     @BeforeAll
     public static void setupValidation() {
@@ -46,34 +46,34 @@ public class PassengerControllerTest {
     }
 
     @Test
-    public void validPassengerDto() {
-        var violations = validator.validate(createValidPassengerDto());
+    public void validFlightDto() {
+        var violations = validator.validate(createValidFlightDto());
         assertTrue(violations.isEmpty());
     }
 
     @Test
-    public void addGetPassenger() {
-        var passenger = createValidPassengerDto();
-        var added = passengerController.post(passenger);
-        assertEquals(passenger, added);
-        var found = passengerController.find(passenger.getId());
+    public void addGetFlight() {
+        var flight = createValidFlightDto();
+        var added = flightController.post(flight);
+        assertEquals(flight, added);
+        var found = flightController.find(flight.getFlightNumber());
         assertTrue(found.isPresent());
-        assertEquals(passenger, found.get());
+        assertEquals(flight, found.get());
     }
 
     @Test
-    public void addListPassengers() {
-        var passengers = IntStream.range(1, 100).mapToObj(suffix -> {
-            var passenger = createValidPassengerDto();
-            passenger.setId(("123-45-%04d".formatted(suffix)));
-            return passenger;
+    public void addListFlights() {
+        var flights = IntStream.range(1, 100).mapToObj(suffix -> {
+            var flight = createValidFlightDto();
+            flight.setFlightNumber(("TS%04d".formatted(suffix)));
+            return flight;
         }).toList();
-        for (var p : passengers) {
-            var r = passengerController.post(p);
+        for (var p : flights) {
+            var r = flightController.post(p);
             assertEquals(p, r);
         }
-        var all = passengerController.findAll();
-        assertEquals(passengers, all);
+        var all = flightController.findAll();
+        assertEquals(flights, all);
     }
 
 }

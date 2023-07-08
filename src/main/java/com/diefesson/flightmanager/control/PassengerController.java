@@ -1,4 +1,4 @@
-package com.diefesson.flightmanager;
+package com.diefesson.flightmanager.control;
 
 import java.util.List;
 import java.util.Optional;

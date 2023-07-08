@@ -2,6 +2,7 @@ package com.diefesson.flightmanager.test.util;
 
 import java.util.Set;
 
+import com.diefesson.flightmanager.dto.FlightDto;
 import com.diefesson.flightmanager.dto.PassengerDto;
 import com.diefesson.flightmanager.model.Flight;
 import com.diefesson.flightmanager.model.Passenger;
@@ -15,6 +16,15 @@ public class ValidInstances {
                 .origin("Brazil")
                 .destination("United States")
                 .passengers(Set.of())
+                .build();
+    }
+
+    public static FlightDto createValidFlightDto() {
+        return FlightDto
+                .builder()
+                .flightNumber("AA1234")
+                .origin("Brazil")
+                .destination("United States")
                 .build();
     }
 
