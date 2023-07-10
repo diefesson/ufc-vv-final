@@ -30,4 +30,6 @@ public class PassengerDto implements IdCountryGet {
     @CountryCode
     private String countryCode;
 
+    private boolean vip;
+
 }

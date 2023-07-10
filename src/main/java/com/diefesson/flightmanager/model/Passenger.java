@@ -41,4 +41,6 @@ public class Passenger implements IdCountryGet {
     @ManyToMany
     private Set<Flight> flights;
 
+    private boolean vip;
+
 }

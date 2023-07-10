@@ -16,15 +16,17 @@ public class FlightBuilderUtil {
         var id = split[0].trim();
         var name = split[1].trim();
         var countryCode = split[2].trim();
+        var vip = Boolean.parseBoolean(split[3].trim());
         return Passenger
                 .builder()
                 .id(id)
                 .name(name)
                 .countryCode(countryCode)
+                .vip(vip)
                 .build();
     }
 
-    public static Set<Passenger> readPassengers(String flightNumber) throws IOException {
+    public static Set<Passenger> loadPassengers(String flightNumber) throws IOException {
         var path = "/flights/%s.csv".formatted(flightNumber);
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(FlightBuilderUtil.class.getResourceAsStream(path)))) {
@@ -35,8 +37,8 @@ public class FlightBuilderUtil {
         }
     }
 
-    public static Flight readFlights(String flightNumber) throws IOException {
-        var passengers = readPassengers(flightNumber);
+    public static Flight loadFlight(String flightNumber) throws IOException {
+        var passengers = loadPassengers(flightNumber);
         return Flight
                 .builder()
                 .flightNumber(flightNumber)

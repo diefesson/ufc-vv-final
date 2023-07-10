@@ -45,9 +45,9 @@ public class FlightWithPassengersTest {
 
     @BeforeEach
     public void setupFlights() throws IOException {
-        flight1 = FlightBuilderUtil.readFlights("AA1234");
-        flight2 = FlightBuilderUtil.readFlights("AA1235");
-        flight3 = FlightBuilderUtil.readFlights("AA1236");
+        flight1 = FlightBuilderUtil.loadFlight("AA1234");
+        flight2 = FlightBuilderUtil.loadFlight("AA1235");
+        flight3 = FlightBuilderUtil.loadFlight("AA1236");
     }
 
     @Test

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,12 @@ public class EmbarkControllerTest {
 
     private Flight flight;
 
+    private Set<EmbarkInfoDto> regularEmbarkInfos;
+    private Set<EmbarkInfoDto> vipEmbarkInfos;
+    private Set<EmbarkInfoDto> embarkInfos;
+
+    private Set<PassengerDto> passengerDtos;
+
     @Autowired
     public FlightController flightController;
 
@@ -52,42 +59,59 @@ public class EmbarkControllerTest {
     @SneakyThrows
     public void setupFlight() {
         var mapper = new ModelMapper();
-        flight = FlightBuilderUtil.readFlights("AA1235");
+        flight = FlightBuilderUtil.loadFlight("AA1235");
         flightController.post(mapper.map(flight, FlightDto.class));
         for (var p : flight.getPassengers()) {
             var dto = mapper.map(p, PassengerDto.class);
             passengerController.post(dto);
         }
+        regularEmbarkInfos = new HashSet<>();
+        vipEmbarkInfos = new HashSet<>();
+        embarkInfos = new HashSet<>();
+        for (var p : flight.getPassengers()) {
+            var embarkInfo = new EmbarkInfoDto(flight.getFlightNumber(), p.getId());
+            if (p.isVip()) {
+                vipEmbarkInfos.add(embarkInfo);
+            } else {
+                regularEmbarkInfos.add(embarkInfo);
+            }
+            embarkInfos.add(embarkInfo);
+        }
+        passengerDtos = flight
+                .getPassengers()
+                .stream()
+                .map(p -> mapper.map(p, PassengerDto.class))
+                .collect(Collectors.toSet());
     }
 
     @Test
     @SneakyThrows
     public void embarkDisembarkTest() {
-        var embarkInfos = flight
-                .getPassengers()
-                .stream()
-                .map(p -> new EmbarkInfoDto(flight.getFlightNumber(), p.getId()))
-                .collect(Collectors.toSet());
-        var passengerDtos = flight
-                .getPassengers()
-                .stream()
-                .map(p -> mapper.map(p, PassengerDto.class))
-                .collect(Collectors.toSet());
+        // Embark passengers
         for (var ei : embarkInfos) {
             assertTrue(embarkController.embark(ei));
         }
+        // Cannot embark a embarked passenger two times
         for (var ei : embarkInfos) {
             assertFalse(embarkController.embark(ei));
         }
+        // Verify embarked passengers
         var persistedDtos = embarkController.listPassenger(flight.getFlightNumber());
         assertEquals(passengerDtos, new HashSet<>(persistedDtos));
-        for (var ei : embarkInfos) {
+        // Disembark regular passengers
+        for (var ei : regularEmbarkInfos) {
             assertTrue(embarkController.disembark(ei));
         }
-        for (var ei : embarkInfos) {
+        // Cannot disembark a disembarked passenger
+        for (var ei : regularEmbarkInfos) {
             assertFalse(embarkController.disembark(ei));
         }
-        assertTrue(embarkController.listPassenger(flight.getFlightNumber()).isEmpty());
+        // Cannot disembark a vip passenger
+        for (var ei : vipEmbarkInfos) {
+            assertFalse(embarkController.disembark(ei));
+        }
+        // Checks all remaining passengers are vips
+        assertTrue(embarkController.listPassenger(flight.getFlightNumber()).stream().allMatch(p -> p.isVip()));
     }
 
 }

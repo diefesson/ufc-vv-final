@@ -49,7 +49,8 @@ public class Flight {
     @NotNull
     @ToString.Exclude
     @ManyToMany
-    private Set<Passenger> passengers;
+    @Builder.Default
+    private Set<Passenger> passengers = new HashSet<>();
 
     public int getPassengersCount() {
         return passengers.size();
@@ -59,7 +60,7 @@ public class Flight {
         if (status != FlightStatus.AT_ORIGIN) {
             throw new ModelException("cannot add passengers any longer");
         }
-        passengers = new HashSet<>(getPassengers());
+        passengers = new HashSet<>(passengers);
         var result = passengers.add(passenger);
         setPassengers(passengers);
         return result;
@@ -68,6 +69,9 @@ public class Flight {
     public boolean removePassenger(Passenger passenger) throws ModelException {
         if (status != FlightStatus.AT_ORIGIN) {
             throw new ModelException("cannot remove passengers any longer");
+        }
+        if (passenger.isVip()) {
+            return false;
         }
         passengers = new HashSet<>(passengers);
         var result = passengers.remove(passenger);
