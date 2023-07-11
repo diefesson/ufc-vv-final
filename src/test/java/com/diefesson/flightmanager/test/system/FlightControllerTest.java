@@ -62,6 +62,14 @@ public class FlightControllerTest {
     }
 
     @Test
+    public void addGetInvalidFlight() {
+        var flight = createValidFlightDto();
+        flightController.post(flight);
+        var found = flightController.find("AA7890");
+        assertTrue(found.isEmpty());
+    }
+
+    @Test
     public void addListFlights() {
         var flights = IntStream.range(1, 100).mapToObj(suffix -> {
             var flight = createValidFlightDto();

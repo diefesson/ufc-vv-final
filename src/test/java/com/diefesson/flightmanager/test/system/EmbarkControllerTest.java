@@ -1,5 +1,7 @@
 package com.diefesson.flightmanager.test.system;
 
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,6 +27,8 @@ import com.diefesson.flightmanager.control.PassengerController;
 import com.diefesson.flightmanager.dto.EmbarkInfoDto;
 import com.diefesson.flightmanager.dto.FlightDto;
 import com.diefesson.flightmanager.dto.PassengerDto;
+import com.diefesson.flightmanager.exception.FlightNotFoundException;
+import com.diefesson.flightmanager.exception.PassengerNotFoundException;
 import com.diefesson.flightmanager.model.Flight;
 import com.diefesson.flightmanager.test.util.FlightBuilderUtil;
 
@@ -54,6 +58,9 @@ public class EmbarkControllerTest {
 
     @Autowired
     public ModelMapper mapper;
+
+    private static final String UNKNOWN_FLIGHT_NUMBER = "AA7890";
+    private static final String UNKNOWN_PASSENGER_ID = "321-654-9870";
 
     @BeforeEach
     @SneakyThrows
@@ -112,6 +119,24 @@ public class EmbarkControllerTest {
         }
         // Checks all remaining passengers are vips
         assertTrue(embarkController.listPassenger(flight.getFlightNumber()).stream().allMatch(p -> p.isVip()));
+    }
+
+    @Test
+    public void invalidListPassengers() {
+        assertNotEquals(UNKNOWN_FLIGHT_NUMBER, flight.getFlightNumber());
+        assertThrows(FlightNotFoundException.class, () -> embarkController.listPassenger(UNKNOWN_FLIGHT_NUMBER));
+    }
+
+    @Test
+    public void invalidEmbarkDisembark() {
+        assertNotEquals(UNKNOWN_FLIGHT_NUMBER, flight.getFlightNumber());
+        assertTrue(flight.getPassengers().stream().allMatch(p -> !p.getId().equals(UNKNOWN_PASSENGER_ID)));
+        var unknownFlightDto = new EmbarkInfoDto(UNKNOWN_FLIGHT_NUMBER, UNKNOWN_PASSENGER_ID);
+        var unknownPassengerDto = new EmbarkInfoDto(flight.getFlightNumber(), UNKNOWN_PASSENGER_ID);
+        assertThrows(FlightNotFoundException.class, () -> embarkController.embark(unknownFlightDto));
+        assertThrows(PassengerNotFoundException.class, () -> embarkController.embark(unknownPassengerDto));
+        assertThrows(FlightNotFoundException.class, () -> embarkController.disembark(unknownFlightDto));
+        assertThrows(PassengerNotFoundException.class, () -> embarkController.disembark(unknownPassengerDto));
     }
 
 }

@@ -76,4 +76,9 @@ public class PassengerControllerTest {
         assertEquals(passengers, all);
     }
 
+    @Test
+    void unknownPassenger() {
+        assertTrue(passengerController.find("123-456-7890").isEmpty());
+    }
+
 }
