@@ -45,12 +45,14 @@ public class PassengerControllerTest {
         validatorFactory.close();
     }
 
+    // SYSTEM-PASSENGER-00
     @Test
     public void validPassengerDto() {
         var violations = validator.validate(createValidPassengerDto());
         assertTrue(violations.isEmpty());
     }
 
+    // SYSTEM-PASSENGER-01
     @Test
     public void addGetPassenger() {
         var passenger = createValidPassengerDto();
@@ -61,6 +63,7 @@ public class PassengerControllerTest {
         assertEquals(passenger, found.get());
     }
 
+    // SYSTEM-PASSENGER-02
     @Test
     public void addListPassengers() {
         var passengers = IntStream.range(1, 100).mapToObj(suffix -> {
@@ -76,6 +79,7 @@ public class PassengerControllerTest {
         assertEquals(passengers, all);
     }
 
+    // SYSTEM-PASSENGER-03
     @Test
     void unknownPassenger() {
         assertTrue(passengerController.find("123-456-7890").isEmpty());

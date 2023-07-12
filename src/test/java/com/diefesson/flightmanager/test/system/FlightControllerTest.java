@@ -45,12 +45,14 @@ public class FlightControllerTest {
         validatorFactory.close();
     }
 
+    // SYSTEM-FLIGHT-00
     @Test
     public void validFlightDto() {
         var violations = validator.validate(createValidFlightDto());
         assertTrue(violations.isEmpty());
     }
 
+    // SYSTEM-FLIGHT-01
     @Test
     public void addGetFlight() {
         var flight = createValidFlightDto();
@@ -61,6 +63,7 @@ public class FlightControllerTest {
         assertEquals(flight, found.get());
     }
 
+    // SYSTEM-FLIGHT-02
     @Test
     public void addGetInvalidFlight() {
         var flight = createValidFlightDto();
@@ -69,6 +72,7 @@ public class FlightControllerTest {
         assertTrue(found.isEmpty());
     }
 
+    // SYSTEM-FLIGHT-03
     @Test
     public void addListFlights() {
         var flights = IntStream.range(1, 100).mapToObj(suffix -> {

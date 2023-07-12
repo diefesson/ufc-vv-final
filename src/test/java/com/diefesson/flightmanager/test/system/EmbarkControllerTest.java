@@ -91,6 +91,7 @@ public class EmbarkControllerTest {
                 .collect(Collectors.toSet());
     }
 
+    // SYSTEM-EMBARK-00
     @Test
     @SneakyThrows
     public void embarkDisembarkTest() {
@@ -121,12 +122,14 @@ public class EmbarkControllerTest {
         assertTrue(embarkController.listPassenger(flight.getFlightNumber()).stream().allMatch(p -> p.isVip()));
     }
 
+    // SYSTEM-EMBARK-01
     @Test
     public void invalidListPassengers() {
         assertNotEquals(UNKNOWN_FLIGHT_NUMBER, flight.getFlightNumber());
         assertThrows(FlightNotFoundException.class, () -> embarkController.listPassenger(UNKNOWN_FLIGHT_NUMBER));
     }
 
+    // SYSTEM-EMBARK-02
     @Test
     public void invalidEmbarkDisembark() {
         assertNotEquals(UNKNOWN_FLIGHT_NUMBER, flight.getFlightNumber());

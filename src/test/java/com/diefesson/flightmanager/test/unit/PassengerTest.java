@@ -1,10 +1,12 @@
 package com.diefesson.flightmanager.test.unit;
 
 import static com.diefesson.flightmanager.test.util.ValidInstances.createValidPassenger;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -30,6 +32,15 @@ public class PassengerTest {
         validatorFactory.close();
     }
 
+    // UNIT-PASSENGER-00
+    @Test
+    public void testValidPassenger() {
+        var passenger = createValidPassenger();
+        var violations = validator.validate(passenger);
+        assertTrue(violations.isEmpty());
+    }
+
+    // UNIT-PASSENGER-01
     @ParameterizedTest
     @CsvSource({
             "300-45-6789, US, 0",
@@ -37,7 +48,6 @@ public class PassengerTest {
             "900-45-6789, GB, 0",
             "300-45-6789, GB, 1",
     })
-
     public void testPassengerId(String id, String countryCode, int expectedViolations) {
         var passenger = createValidPassenger();
         passenger.setId(id);
@@ -46,6 +56,7 @@ public class PassengerTest {
         assertEquals(expectedViolations, violations.size());
     }
 
+    // UNIT-PASSENGER-02
     @ParameterizedTest
     @CsvSource({
             "GB, 0",

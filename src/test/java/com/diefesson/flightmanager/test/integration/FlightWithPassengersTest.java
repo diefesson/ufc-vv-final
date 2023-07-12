@@ -50,6 +50,7 @@ public class FlightWithPassengersTest {
         flight3 = FlightBuilderUtil.loadFlight("AA1236");
     }
 
+    // INTEGRATION-FLIGHT-00
     @Test
     public void testFlightsPassengerCount() {
         assertEquals(flight1.getPassengersCount(), flight1.getSeats());
@@ -60,6 +61,7 @@ public class FlightWithPassengersTest {
         assertEquals(24, flight3.getSeats());
     }
 
+    // INTEGRATION-FLIGHT-01
     @Test
     public void testNumberOfSeatsCannotBeExceeded() {
         flight1.setSeats(49);
@@ -67,6 +69,7 @@ public class FlightWithPassengersTest {
         assertEquals(1, violations.size());
     }
 
+    // INTEGRATION-FLIGHT-02
     @SneakyThrows
     @Test
     public void testAddRemovePassengers() {
@@ -80,6 +83,7 @@ public class FlightWithPassengersTest {
         assertEquals(51, flight1.getSeats());
     }
 
+    // INTEGRATION-FLIGHT-03
     @SneakyThrows
     @Test
     public void testNotChangePassengersAfterTakeOff() {

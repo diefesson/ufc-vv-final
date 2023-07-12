@@ -35,35 +35,29 @@ public class FlightTest {
         validatorFactory.close();
     }
 
+    // UNIT-FLIGHT-00
     @Test
     void testValidFlight() {
         var violations = validator.validate(createValidFlight());
         assertTrue(violations.isEmpty());
     }
 
-    @Test
-    public void testValidFlightNumber() {
-        var flight1 = createValidFlight();
-        var flight2 = createValidFlight();
-        flight1.setFlightNumber("AA123");
-        flight2.setFlightNumber("AA1234");
-        var violations1 = validator.validate(flight1);
-        var violations2 = validator.validate(flight2);
-        assertEquals(0, violations1.size());
-        assertEquals(0, violations2.size());
-    }
-
+    // UNIT-FLIGHT-01
     @ParameterizedTest
     @CsvSource({
-            "AA12", "AA12345"
+            "AA123, 0",
+            "AA1234, 0",
+            "AA12, 1",
+            "AA12345, 1"
     })
-    public void testInvalidFlightNumber(String flightNumber) {
+    public void testFlightNumber(String flightNumber, int expectedViolations) {
         var flight = createValidFlight();
         flight.setFlightNumber(flightNumber);
-        var violations = validator.validate(flight);
-        assertEquals(1, violations.size());
+        var violations1 = validator.validate(flight);
+        assertEquals(expectedViolations, violations1.size());
     }
 
+    // UNIT-FLIGHT-02
     @SneakyThrows
     @Test
     public void testFlyStatus() {
@@ -75,6 +69,7 @@ public class FlightTest {
         assertEquals(FlightStatus.AT_DESTINATION, flight.getStatus());
     }
 
+    // UNIT-FLIGHT-03
     @SneakyThrows
     @Test
     public void testFlyOrdering() {
@@ -86,6 +81,7 @@ public class FlightTest {
         assertThrows(ModelException.class, () -> flight.land());
     }
 
+    // UNIT-FLIGHT-04
     @SneakyThrows
     @Test
     public void testChangeOrigin() {
@@ -96,6 +92,7 @@ public class FlightTest {
         assertThrows(ModelException.class, () -> flight.setOrigin("Canada"));
     }
 
+    // UNIT-FLIGHT-05
     @SneakyThrows
     @Test
     public void testChangeDestination() {
@@ -107,6 +104,7 @@ public class FlightTest {
         assertThrows(ModelException.class, () -> flight.setDestination("Canada"));
     }
 
+    // UNIT-FLIGHT-06
     @SneakyThrows
     @Test
     public void testTakeOffFromSomewhere() {
@@ -115,6 +113,7 @@ public class FlightTest {
         assertThrows(ModelException.class, () -> flight.takeOff());
     }
 
+    // UNIT-FLIGHT-07
     @SneakyThrows
     @Test
     public void testLandIntoSomewhere() {
@@ -124,6 +123,7 @@ public class FlightTest {
         assertThrows(ModelException.class, () -> flight.land());
     }
 
+    // UNIT-FLIGHT-08
     @Test
     public void testNoLandBeforeTakeOff() {
         var flight = createValidFlight();
